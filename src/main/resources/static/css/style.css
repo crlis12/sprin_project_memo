@@ -5,7 +5,7 @@ header {
 }
 
 .contents{
-	height: 500px;
+	min-height: 500px;
 }
 
 footer{
@@ -17,3 +17,6 @@ footer{
 	margin-top: 15px;
 	margin-left: 15px;
 }
+
+.sign-up-box {width:550px;}
+.sign-up-table th {background:#D8D8D8;}

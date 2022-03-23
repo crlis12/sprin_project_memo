@@ -33,7 +33,7 @@
 		<header class="bg-warning">
 			<jsp:include page="../include/gnb.jsp" />
 		</header>
-		<section class="contents bg-success">
+		<section class="contents">
 			<jsp:include page="../${viewName}.jsp" />
 		</section>
 		<footer class="bg-info">

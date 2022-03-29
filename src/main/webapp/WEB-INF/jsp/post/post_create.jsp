@@ -36,6 +36,7 @@
 		$('#saveBtn').on('click', function(){
 			let subject = $('input[name=subject]').val();
 			let content = $('textarea[name=content]').val();
+			
 			if(subject ==''){
 				alert("제목을 입력해주세요.");
 				return;
@@ -52,6 +53,8 @@
 			
 			// 파일이 업로드 된 경우 확장자 체크
 			let fileName = $('input[name=file]').val();
+			
+			console.log(fileName);
 			if(fileName != "") {
 				console.log(fileName.split(".")); //파일 경로를 . 기준으로 잘라 배열에 저장한다.
 				let ext = fileName.split(".").pop().toLowerCase(); // 확장자를 뽑아내고 소문자로 변7경

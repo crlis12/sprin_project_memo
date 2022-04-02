@@ -23,7 +23,10 @@ public class PostController {
 	private PostBO postBO;
 	
 	@RequestMapping("/post_list_view")
-	public String postListView(Model model, HttpServletRequest request) {
+	public String postListView(
+			@RequestParam(value = "prevId" ,required = false) Integer prevIdParam,
+			@RequestParam(value = "nextId" ,required = false) Integer nextIdParam,
+			Model model, HttpServletRequest request) {
 		// 세션의 값을 확인해서 지금 로그인이 되었는지 확인
 		// ->비로그인: 로그인 페이지로 리다이렉트
 		HttpSession session = request.getSession();
@@ -33,8 +36,28 @@ public class PostController {
 			return "redirect:/user/sign_in_view";
 		}
 		
-		List<Post> postList = postBO.getPostListByUserId(userId); // 유저 아이디에 해당하는 유저 글 목록을 가지고 온다
+		List<Post> postList = postBO.getPostListByUserId(userId, prevIdParam, nextIdParam); // 유저 아이디에 해당하는 유저 글 목록을 가지고 온다
 		
+		int prevId = 0;
+		int nextId = 0;
+		if(postList.isEmpty() == false) { // postList가 없는 경우 에러 발생 방지
+			// 7 6 5
+			prevId = postList.get(0).getId(); // 7
+			nextId = postList.get(postList.size() - 1).getId(); // 5
+			
+			// 이전이나 다음이 없는 경우 nextId, prevId를 0으로 세팅한다.(jsp에서 0인지 검사)
+			
+			//마지막 페이지인지 검사 => nextId 0으로
+			if(postBO.isLastPage(userId, nextId)) {
+				nextId = 0;
+			}
+			// 첫번째 페이지인지 검사 => prevId 0으로
+			if(postBO.isFirstPage(userId, prevId)) {
+				prevId = 0;
+			}
+		}
+		model.addAttribute("prevId", prevId); // 리스트 중 가장 앞쪽(제일 큰값) id
+		model.addAttribute("nextId", nextId); // 리스트 중 가장 뒤쪽(제일 작은값) id
 		model.addAttribute("postList", postList);
 		model.addAttribute("viewName", "post/post_list");
 		

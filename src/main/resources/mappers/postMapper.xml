@@ -16,7 +16,38 @@
  			`post`
  		WHERE
  			`userId` = #{userId}
+ 		<!-- 페이징 아닐 때 #{}""붙어있다 ${}""안붙어있다 -->
+ 		<if test="direction == null">
+ 		ORDER BY `id` DESC
+ 		</if>
+ 		<!-- 이전일 때 -->
+ 		<if test="direction == 'prev'">
+ 			<![CDATA[
+ 			AND `id` > #{standardId}
+ 			]]>
+ 		ORDER BY `id` ASC
+ 		</if>
+ 		<!-- 다음일 때 -->
+ 		<if test="direction == 'next'">
+ 			<![CDATA[
+ 			AND `id` < #{standardId}
+ 			]]>
+ 		ORDER BY `id` DESC
+ 		</if>
+ 		LIMIT ${limit}
  	</select>
+ 	
+ 	<select id="selectPostIdByUserIdAndSort" parameterType="map" resultType="int">
+ 		SELECT
+ 			`id`
+ 		FROM
+ 			`post`
+ 		WHERE
+ 			`userId` = #{userId}
+ 		ORDER BY `id` ${sort}
+ 		LIMIT 1;
+ 	</select>
+ 	
  	<insert id="insertPost" parameterType="map">
  		INSERT INTO `post`
  		(
